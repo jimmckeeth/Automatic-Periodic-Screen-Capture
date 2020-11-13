@@ -93,7 +93,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="apssuMain.pas">
+        <DCCReference Include="apscMain.pas">
             <Form>Form15</Form>
             <FormType>dfm</FormType>
         </DCCReference>

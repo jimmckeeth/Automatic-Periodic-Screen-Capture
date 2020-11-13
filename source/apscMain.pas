@@ -1,4 +1,4 @@
-unit apssuMain;
+unit apscMain;
 
 interface
 
@@ -81,7 +81,7 @@ end;
 
 procedure TForm15.ApplicationEvents1Minimize(Sender: TObject);
 begin
-  Timer1.Enabled := True;
+	Timer1.Enabled := True;
 end;
 
 procedure TForm15.ApplicationEvents1Restore(Sender: TObject);

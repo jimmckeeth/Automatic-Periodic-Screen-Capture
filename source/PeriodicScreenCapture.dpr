@@ -2,7 +2,7 @@ program PeriodicScreenCapture;
 
 uses
   Vcl.Forms,
-  apssuMain in 'apssuMain.pas' {Form15};
+  apscMain in 'apscMain.pas' {Form15};
 
 {$R *.res}
 
