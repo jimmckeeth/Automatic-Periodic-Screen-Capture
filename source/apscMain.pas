@@ -141,7 +141,8 @@ begin
 		RzButtonEdit1.ButtonGlyph);
 	var png  := TPngImage.Create;
 	try
-		png.LoadFromFile('C:\Users\Jim\Documents\GitHub\Automatic-Periodic-Screen-Shot-Utility\icons\black\folder_96px.png');
+    var theImageFolder :=ExtractFilePath(Application.ExeName)+'..\..\..\icons\black\folder_96px.png';
+		png.LoadFromFile(theImageFolder);
 		RzButtonEdit1.ButtonGlyph.Assign(nil);
 		//RzButtonEdit1.ButtonGlyph.Assign(png);
 		RzButtonEdit1.ButtonGlyph.SetSize(16,16);
