@@ -15,7 +15,7 @@ object Form15: TForm15
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Label2: TLabel
+  object lblBackGropIntro: TLabel
     Left = 0
     Top = 41
     Width = 616
@@ -26,7 +26,7 @@ object Form15: TForm15
     Caption = 
       'Automatically captures when minimized.'#13#13'Icons from https://icons' +
       '8.com/'#13#13'Program by Jim McKeeth'#13'Uses Konopka Signature Components' +
-      #13'and Delphi 10.4.1'
+      #13'and Delphi 10.4.2'#13#10
     Layout = tlCenter
     ExplicitLeft = 272
     ExplicitTop = 200
@@ -41,8 +41,8 @@ object Form15: TForm15
     Align = alClient
     Proportional = True
     Stretch = True
-    ExplicitLeft = -6
-    ExplicitTop = 40
+    ExplicitLeft = 219
+    ExplicitTop = 225
   end
   object Panel1: TRzPanel
     Left = 0
@@ -105,11 +105,10 @@ object Form15: TForm15
       end
     end
     object RzPanel3: TRzPanel
-      Left = 209
+      Left = 328
       Top = 7
-      Width = 530
+      Width = 411
       Height = 27
-      Align = alClient
       BorderOuter = fsNone
       Color = 15987699
       Padding.Left = 7
@@ -123,13 +122,14 @@ object Form15: TForm15
         Align = alLeft
         Caption = 'Path'
         Layout = tlCenter
-        ExplicitHeight = 13
+        ExplicitLeft = 98
+        ExplicitTop = -3
       end
       object RzButtonEdit1: TRzButtonEdit
         AlignWithMargins = True
         Left = 38
         Top = 3
-        Width = 489
+        Width = 370
         Height = 21
         Text = ''
         Align = alClient
@@ -182,7 +182,20 @@ object Form15: TForm15
         AltBtnWidth = 26
         ButtonWidth = 26
         OnButtonClick = RzButtonEdit1ButtonClick
+        ExplicitLeft = 134
+        ExplicitTop = 7
+        ExplicitWidth = 400
       end
+    end
+    object chkOnlyChanges: TCheckBox
+      Left = 215
+      Top = 12
+      Width = 97
+      Height = 17
+      Caption = 'Only Changes'
+      Checked = True
+      State = cbChecked
+      TabOrder = 3
     end
   end
   object RzPanel1: TRzPanel
@@ -203,6 +216,7 @@ object Form15: TForm15
       ItemHeight = 13
       TabOrder = 0
       OnClick = ListBox1Click
+      ExplicitTop = -1
     end
   end
   object Timer1: TTimer

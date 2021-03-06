@@ -28,8 +28,9 @@ type
     RzPanel2: TRzPanel;
     RzPanel3: TRzPanel;
     ApplicationEvents1: TApplicationEvents;
-    Label2: TLabel;
+    lblBackGropIntro: TLabel;
     Image1: TImage;
+    chkOnlyChanges: TCheckBox;
     procedure ListBox1Click(Sender: TObject);
 		procedure RzButton1Click(Sender: TObject);
 		procedure RzSpinEdit1Change(Sender: TObject);
@@ -41,8 +42,10 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
 	private
 		{ Private declarations }
+    FLastBitmap : TBitmap;
 		procedure Capture;
     procedure Clear;
+    procedure SavePnG(vBmp: TBitmap; vWhen: TDateTime);
 	public
 		{ Public declarations }
 	end;
@@ -55,6 +58,33 @@ implementation
 {$R *.dfm}
 
 uses System.IOUtils, Vcl.Imaging.pngimage, System.DateUtils;
+
+//https://stackoverflow.com/questions/1352312/what-is-the-fastest-way-to-check-if-two-tbitmaps-are-the-same
+function IsSameBitmap(Bitmap1, Bitmap2: TBitmap): Boolean;
+var
+ Stream1, Stream2: TMemoryStream;
+begin
+//  Assert((Bitmap1 <> nil) and (Bitmap2 <> nil), 'Params can''t be nil');
+  Result:= False;
+  if (Bitmap1 = nil) or (Bitmap2 = nil) then
+    Exit;
+  if (Bitmap1.Height <> Bitmap2.Height) or (Bitmap1.Width <> Bitmap2.Width) then
+     Exit;
+  Stream1:= TMemoryStream.Create;
+  try
+    Bitmap1.SaveToStream(Stream1);
+    Stream2:= TMemoryStream.Create;
+    try
+      Bitmap2.SaveToStream(Stream2);
+      if Stream1.Size = Stream2.Size Then
+        Result:= CompareMem(Stream1.Memory, Stream2.Memory, Stream1.Size);
+    finally
+      Stream2.Free;
+    end;
+  finally
+    Stream1.Free;
+  end;
+end;
 
 function ScreenShot: TBitmap;
 begin
@@ -81,12 +111,14 @@ end;
 
 procedure TForm15.ApplicationEvents1Minimize(Sender: TObject);
 begin
+  FLastBitmap:=nil;
 	Timer1.Enabled := True;
 end;
 
 procedure TForm15.ApplicationEvents1Restore(Sender: TObject);
 begin
   Timer1.Enabled := False;
+  FLastBitmap:=nil;
 end;
 
 procedure TForm15.Capture;
@@ -103,18 +135,17 @@ begin
 		var bmp := ScreenShot;
 		var when := Now;
 		ListBox1.Items.AddObject(TimeToStr(when), bmp);
-		Image1.Picture.Bitmap.Assign(bmp);
-			var png := TPngImage.Create;
-			try
-				png.Assign(bmp);
 
-				var fileName :=  Format('%.4d-%s.png',
-					[ListBox1.Items.Count,
-					 FormatDateTime('hhmmss',when)]);
-				png.SaveToFile(TPath.Combine(RzButtonEdit1.Text, filename));
-			finally
-				png.Free;
-			end;
+		Image1.Picture.Bitmap.Assign(bmp);
+    if chkOnlyChanges.Checked then
+    begin
+      if IsSameBitmap(bmp,FLastBitmap) then
+        SavePnG(bmp,when);
+    end
+    else
+      SavePnG(bmp,when);
+
+    FLastBitmap:=bmp;
 
 	finally
 		if Visible and (Self.WindowState <> wsMinimized) then
@@ -155,6 +186,7 @@ end;
 
 procedure TForm15.Clear;
 begin
+  FLastBitmap:=nil;
 	ListBox1.Items.BeginUpdate;
 	try
 		for var idx := 0 to pred(ListBox1.Items.Count) do
@@ -192,6 +224,21 @@ end;
 procedure TForm15.RzSpinEdit1Change(Sender: TObject);
 begin
   Timer1.Interval := RzSpinEdit1.IntValue * 1000;
+end;
+
+procedure TForm15.SavePnG(vBmp: TBitmap; vWhen: TDateTime);
+begin
+  var png := TPngImage.Create;
+  try
+    png.Assign(vbmp);
+
+    var fileName :=  Format('%.4d-%s.png',
+      [ListBox1.Items.Count,
+       FormatDateTime('hhmmss',vwhen)]);
+    png.SaveToFile(TPath.Combine(RzButtonEdit1.Text, filename));
+  finally
+    png.Free;
+  end;
 end;
 
 procedure TForm15.Timer1Timer(Sender: TObject);
